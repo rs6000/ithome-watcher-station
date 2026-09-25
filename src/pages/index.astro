@@ -1,11 +1,29 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import ContestantExplorer from '../components/ContestantExplorer.jsx';
+import { loadYearData, YEAR_OPTIONS } from '../utils/loadYearData.js';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// 在 build 時一次把所有年度的資料都讀出來，組成 { 2026: {...}, 2025: {...}, ... }
+// 這樣年度切換時，前端不需要再另外 fetch，直接從已經存在的物件裡取資料即可。
+const dataByYear = {};
+for (const year of YEAR_OPTIONS) {
+    dataByYear[year] = loadYearData(year);
+}
+
+const title = 'iThome 鐵人賽觀測站｜歷年參賽文章與技術趨勢彙整';
+const description =
+    '彙整 2022 至 2026 年 iThome 鐵人賽歷屆參賽者的文章紀錄，透過歷年主題與內容，回顧當年度台灣 IT 圈盛行的技術與話題趨勢。';
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={title} description={description} canonicalPath="/">
+    <section class="w-full bg-white border-b border-gray-100">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 py-4">
+            <p class="text-sm text-gray-600">
+                彙整 2022 至 2026 年 iThome 鐵人賽歷屆參賽者的文章紀錄，透過歷年主題與內容，
+                回顧當年度台灣 IT 圈盛行的技術與話題趨勢。
+            </p>
+        </div>
+    </section>
+
+    <ContestantExplorer client:load dataByYear={dataByYear} years={YEAR_OPTIONS} />
 </Layout>

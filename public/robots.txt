@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ithome-watcher-station.vercel.app/sitemap.xml
